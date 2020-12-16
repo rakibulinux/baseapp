@@ -9,7 +9,6 @@ import {
     WALLETS_ADDRESS_DATA,
     WALLETS_ADDRESS_ERROR,
     WALLETS_ADDRESS_FETCH,
-    WALLETS_DATA,
     WALLETS_ERROR,
     WALLETS_FETCH,
     WALLETS_WITHDRAW_CCY_DATA,
@@ -36,139 +35,9 @@ describe('Wallets', () => {
     });
 
     describe('Fetch wallets', () => {
-        const balancesResponse = [
-            {
-                balance: '0.0',
-                currency: 'bch',
-                locked: '0.0',
-            },
-            {
-                balance: '0.0',
-                currency: 'btc',
-                locked: '0.0',
-            },
-            {
-                balance: '0.0',
-                currency: 'eth',
-                locked: '0.0',
-            },
-        ];
-
-        const currenciesResponse = [
-            {
-                base_factor: 100000000,
-                deposit_fee: '0.0',
-                explorer_address: 'https://www.blocktrail.com/tBCC/address/#{address}',
-                explorer_transaction: 'https://www.blocktrail.com/tBCC/tx/#{txid}',
-                id: 'bch',
-                min_deposit_amount: '0.0000748',
-                min_withdraw_amount: '0.0',
-                precision: 8,
-                symbol: '฿',
-                type: 'coin',
-                withdraw_fee: '0.0',
-                withdraw_limit_24h: '0.1',
-                withdraw_limit_72h: '0.2',
-            },
-            {
-                base_factor: 100000000,
-                deposit_fee: '0.0',
-                explorer_address: 'https://testnet.blockchain.info/address/#{address}',
-                explorer_transaction: 'https://testnet.blockchain.info/tx/#{txid}',
-                id: 'btc',
-                min_deposit_amount: '0.0000356',
-                min_withdraw_amount: '0.0',
-                precision: 8,
-                symbol: '฿',
-                type: 'coin',
-                withdraw_fee: '0.0',
-                withdraw_limit_24h: '0.1',
-                withdraw_limit_72h: '0.2',
-            },
-            {
-                base_factor: 1000000000000000000,
-                deposit_fee: '0.0',
-                explorer_address: 'https://rinkeby.etherscan.io/address/#{address}',
-                explorer_transaction: 'https://rinkeby.etherscan.io/tx/#{txid}',
-                id: 'eth',
-                min_deposit_amount: '0.00021',
-                min_withdraw_amount: '0.0',
-                precision: 8,
-                symbol: 'Ξ',
-                type: 'coin',
-                withdraw_fee: '0.0',
-                withdraw_limit_24h: '0.2',
-                withdraw_limit_72h: '0.5000000000000001',
-            },
-        ];
-
-        const feesResponse = [
-            {
-                currency: 'bch',
-                fee: {
-                    type: 'fixed',
-                    value: '0.0',
-                },
-                type: 'coin',
-            },
-            {
-                currency: 'btc',
-                fee: {
-                    type: 'fixed',
-                    value: '0.0',
-                },
-                type: 'coin',
-            },
-            {
-                currency: 'eth',
-                fee: {
-                    type: 'fixed',
-                    value: '0.0',
-                },
-                type: 'coin',
-            },
-        ];
-
-        const walletsDataActionPayload = [
-            {
-                balance: '0.0',
-                currency: 'bch',
-                explorerAddress: 'https://www.blocktrail.com/tBCC/address/#{address}',
-                explorerTransaction: 'https://www.blocktrail.com/tBCC/tx/#{txid}',
-                fee: '0.0',
-                locked: '0.0',
-                type: 'coin',
-                fixed: 8,
-            },
-            {
-                balance: '0.0',
-                currency: 'btc',
-                explorerAddress: 'https://testnet.blockchain.info/address/#{address}',
-                explorerTransaction: 'https://testnet.blockchain.info/tx/#{txid}',
-                fee: '0.0',
-                locked: '0.0',
-                type: 'coin',
-                fixed: 8,
-            },
-            {
-                balance: '0.0',
-                currency: 'eth',
-                explorerAddress: 'https://rinkeby.etherscan.io/address/#{address}',
-                explorerTransaction: 'https://rinkeby.etherscan.io/tx/#{txid}',
-                fee: '0.0',
-                locked: '0.0',
-                type: 'coin',
-                fixed: 8,
-            },
-        ];
 
         const expectedWalletsFetch = {
             type: WALLETS_FETCH,
-        };
-
-        const expectedWalletsData = {
-            type: WALLETS_DATA,
-            payload: walletsDataActionPayload,
         };
 
         const expectedWalletsError = {
@@ -178,35 +47,6 @@ describe('Wallets', () => {
                 message: ['Server error'],
             },
         };
-
-        const mockWalletsBalancesFetch = () => {
-            mockAxios.onGet(`/account/balances`).reply(200, balancesResponse);
-        };
-
-        const mockWalletsCurrenciesFetch = () => {
-            mockAxios.onGet('/public/currencies').reply(200, currenciesResponse);
-        };
-
-        const mockWalletsWithdrawFeesFetch = () => {
-            mockAxios.onGet('/public/fees/withdraw').reply(200, feesResponse);
-        };
-
-        it('should handle wallet address data', async () => {
-            mockWalletsBalancesFetch();
-            mockWalletsCurrenciesFetch();
-            mockWalletsWithdrawFeesFetch();
-            const promise = new Promise(resolve => {
-                store.subscribe(() => {
-                    const actions = store.getActions();
-                    if (actions.length === 2) {
-                        expect(actions).toEqual([expectedWalletsFetch, expectedWalletsData]);
-                        setTimeout(resolve, 0.01);
-                    }
-                });
-            });
-            store.dispatch(walletsFetch());
-            return promise;
-        });
 
         it('should handle wallet address error', async () => {
             mockNetworkError(mockAxios);
