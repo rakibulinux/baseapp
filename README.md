@@ -61,3 +61,17 @@ docker push <your-docker-store/your-frontend-image-name>
   barong: quay.io/openware/barong:2.4.12
   frontend: <your-docker-store/your-frontend-image-name>
 ```
+
+# What was fixed in v.2.3 for using with Peatio/Barong v.2.4
+
+1. In KYC process - user can add documents after sending profile without waiting confirmation
+
+2. On profile page user can view when step is rejected
+
+3. Migrated to multiple profile datasets
+
+4. Fixed a bug in infobar on trading page (24h Volume)
+
+5. Fixed a bug related to changing withdraw's endpoint
+
+6. Added getting a list of currencies with getting a list of wallets
